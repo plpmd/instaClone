@@ -4,6 +4,7 @@ import TextButton from '@/src/components/TextButton';
 import pickImage from '@/src/util/pickImage';
 import Button from '@/src/components/Button';
 import TextInput from '@/src/components/TextInput';
+import { supabase } from '@/src/lib/supabase';
 
 export default function ProfileScreen() {
   const [image, setImage] = useState<string | null>(null);
@@ -31,7 +32,7 @@ export default function ProfileScreen() {
 
       <View className='gap-3 mt-auto'>
         <Button onPress={() => { }} text='Update' />
-        <Button onPress={() => { }} text='Sign out' />
+        <Button onPress={() => supabase.auth.signOut()} text='Sign out' />
       </View>
 
     </View>

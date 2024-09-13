@@ -7,5 +7,13 @@ export default function AuthLayout() {
     return <Redirect href="/(tabs)" />
   }
   
-  return <Stack />
+  return <Stack>
+    <Stack.Screen
+        name="index"
+        options={{
+          headerTitle: 'Boas Vindas',
+          headerTitleAlign: 'center',
+        }}
+      />
+  </Stack>
 }
