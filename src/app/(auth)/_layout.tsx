@@ -3,17 +3,19 @@ import { Redirect, Stack } from "expo-router";
 
 export default function AuthLayout() {
   const { isAuthenticated } = useAuth()
-  if(isAuthenticated){
+  if (isAuthenticated) {
     return <Redirect href="/(tabs)" />
   }
-  
-  return <Stack>
-    <Stack.Screen
+
+  return (
+    <Stack>
+      <Stack.Screen
         name="index"
         options={{
           headerTitle: 'Boas Vindas',
-          headerTitleAlign: 'center',
+          headerTitleAlign: 'center'
         }}
       />
-  </Stack>
+    </Stack>
+  )
 }

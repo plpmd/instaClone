@@ -4,10 +4,16 @@ import TextButton from '@/src/components/TextButton';
 import pickImage from '@/src/util/pickImage';
 import Button from '@/src/components/Button';
 import { uploadImage } from '@/src/lib/cloudinary';
+import { supabase } from '@/src/lib/supabase';
+import { useAuth } from '@/src/providers/AuthProvider';
+import { router } from 'expo-router';
 
 export default function CreatePost() {
   const [caption, setCaption] = useState('')
   const [image, setImage] = useState<string | null>(null);
+
+  const authState = useAuth()
+  const session = authState?.session
 
   useEffect(() => {
     if (!image) {
@@ -17,9 +23,24 @@ export default function CreatePost() {
 
 
   const createPost = async () => {
-    if(!image) return
+    if (!image) return
     const response = await uploadImage(image)
     const imagePublicId = response?.public_id
+
+
+    const { data, error } = await supabase
+      .from('posts')
+      .insert([
+        { 
+          caption, 
+          image: imagePublicId, 
+          user_id: session?.user.id 
+        },
+      ])
+      .select()
+
+      router.push('/(tabs)')
+
   }
 
   return (
@@ -39,7 +60,7 @@ export default function CreatePost() {
       <TextInput
         onChangeText={(newValue) => setCaption(newValue)}
         value={caption}
-        placeholder='Whats on your mind?'
+        placeholder='Qual é a sua ideia?'
         className='w-full p-3'
       />
 
