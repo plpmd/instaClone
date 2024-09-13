@@ -10,6 +10,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           headerTitle: 'For you',
+          headerTitleAlign: 'center',
           tabBarIcon: ({ color }) => (
             <FontAwesome name="home" size={26} color={color} />
           ),
@@ -20,6 +21,7 @@ export default function TabsLayout() {
         name="new"
         options={{
           headerTitle: 'Create post',
+          headerTitleAlign: 'center',
           tabBarIcon: ({ color }) => (
             <FontAwesome name="plus-square-o" size={26} color={color} />
           ),
@@ -30,6 +32,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           headerTitle: 'Profile',
+          headerTitleAlign: 'center',
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" size={26} color={color} />
           ),
