@@ -3,7 +3,7 @@ import { Image, Pressable, Text, TextInput, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function CreatePost() {
-  const [caption, setCaption] = useState<string | null>(null)
+  const [caption, setCaption] = useState('')
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
