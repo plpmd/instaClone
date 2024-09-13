@@ -3,7 +3,7 @@ import { Image, TextInput, View } from 'react-native';
 import TextButton from '@/src/components/TextButton';
 import pickImage from '@/src/util/pickImage';
 import Button from '@/src/components/Button';
-import { uploadImage } from '@/src/util/cloudinary';
+import { uploadImage } from '@/src/lib/cloudinary';
 
 export default function CreatePost() {
   const [caption, setCaption] = useState('')

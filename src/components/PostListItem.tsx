@@ -3,7 +3,7 @@ import { Post } from '@/src/domain/model'
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
 import { thumbnail } from "@cloudinary/url-gen/actions/resize";
 import { AdvancedImage } from 'cloudinary-react-native';
-import { cld } from '../util/cloudinary';
+import { cld } from '../lib/cloudinary';
 import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
 
