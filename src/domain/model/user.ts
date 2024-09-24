@@ -3,4 +3,5 @@ export type User = {
     avatar_url: string
     image_url: string
     username: string
+    bio: string
 }

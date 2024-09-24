@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { Text, TextInput as RNTextInput } from "react-native";
+import { Text, TextInput as RNTextInput, View } from "react-native";
 
 type Props = {
   header: string
@@ -10,14 +10,14 @@ type Props = {
 
 export default function TextInput({ header, placeholder, value, onChangeText}: Props) {
   return (
-    <>
-      <Text className='text-gray-500 font-semibold'>{header}</Text>
+    <View className="mb-2">
+      <Text className='text-gray-500 font-semibold mb-1'>{header}</Text>
       <RNTextInput
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
         className='border border-gray-300 p-3 rounded-md'
       />
-    </>
+    </View>
   )
 }
