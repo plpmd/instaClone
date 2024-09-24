@@ -17,14 +17,14 @@ export default function PostListItem({ post }: Props) {
   image
     .resize(thumbnail().width(Math.floor(width)).height(Math.floor(width)))
   
-  const avatar = cld.image(post.user.avatar_url)
+  const avatar = cld.image(post.user.avatar_url || 'default_avatar')
   avatar.resize(thumbnail().width(48).height(48).gravity(focusOn(FocusOn.face())))
 
   return (
     <View className="bg-white">
       <View className='p-3 flex-row items-center gap-2'>
         <AdvancedImage cldImg={avatar} className='w-12 aspect-square rounded-full' />
-        <Text className='font-semibold'>{post.user.username}</Text>
+        <Text className='font-semibold'>{post.user.username || 'New user'}</Text>
       </View>
       <AdvancedImage cldImg={image} className='w-full aspect-[4/3]' />
       <View className="flex-row gap-3 p-3">
