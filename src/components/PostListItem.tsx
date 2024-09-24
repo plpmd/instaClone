@@ -18,33 +18,28 @@ type Props = {
 
 export default function PostListItem({ post }: Props) {
   const [isLiked, setIsLiked] = useState(false)
-  const [likeRecord, setLikeRecord] = useState<PostLike |null>(null)
+  const [likeRecord, setLikeRecord] = useState<PostLike | null>(null)
   const { width } = useWindowDimensions()
   const { user } = useAuth()
 
   useEffect(() => {
-    if (isLiked && !likeRecord) {
-      saveLike()
-    } else {
-      deleteLike()
-    }
+      if (isLiked && !likeRecord) {
+        saveLike()
+      } else {
+        deleteLike()
+      }
   })
 
-  const fetchLike = async () => {
-    const { data } = await supabase.from('likes').select('*').eq('user_id', user?.id).eq('post_id', post.id).select()
-    if(data && data.length > 0){
-      setLikeRecord(data[0])
+  useEffect(() => {
+    if(post.my_likes.length > 0){
+      setLikeRecord(post.my_likes[0])
       setIsLiked(true)
     }
-  }
-
-  useEffect(() => {
-    fetchLike()
-  },[])
+  },[post.my_likes])
 
   const saveLike = async () => {
     if (!user) return
-    const { data, error }:PostgrestSingleResponse<PostLike[]>  = await supabase
+    const { data }: PostgrestSingleResponse<PostLike[]> = await supabase
       .from('likes')
       .insert([{ user_id: user.id, post_id: post.id }])
       .select()
@@ -58,7 +53,7 @@ export default function PostListItem({ post }: Props) {
     if (!user) return
     if (likeRecord) {
       const { error } = await supabase.from('likes').delete().eq('id', likeRecord.id)
-      if(!error) setLikeRecord(null)
+      if (!error) setLikeRecord(null)
     }
   }
 
@@ -76,6 +71,7 @@ export default function PostListItem({ post }: Props) {
         <Text className='font-semibold'>{post.user.username || 'New user'}</Text>
       </View>
       <AdvancedImage cldImg={image} className='w-full aspect-[4/3]' />
+
       <View className="flex-row gap-3 p-3">
         <AntDesign
           name={isLiked ? 'heart' : "hearto"}
@@ -87,6 +83,15 @@ export default function PostListItem({ post }: Props) {
         <Feather name="send" size={20} />
         <Feather name="bookmark" size={20} className="ml-auto" />
       </View>
-    </View>
+
+      <View className='px-3 pb-3'>
+        <Text className='font-semibold'>58 likes</Text>
+        <Text>
+          <Text className='font-semibold'>{post.user.username}{'  '}</Text>
+          {post.caption}
+        </Text>
+      </View >
+
+    </View >
   );
 }

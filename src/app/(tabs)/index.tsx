@@ -4,6 +4,7 @@ import PostListItem from '@/src/components/PostListItem';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/src/lib/supabase';
 import { Post } from '@/src/domain/model';
+import { useAuth } from '@/src/providers/AuthProvider';
 
 export default function FeedScreen() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -11,13 +12,18 @@ export default function FeedScreen() {
 
   useEffect(() => {
     fetchPosts()
-  },[])
+  }, [])
+
+  const { user } = useAuth()
 
   const fetchPosts = async () => {
     setLoading(true);
-    let { data, error } = await supabase.from('posts').select('*, user:profiles(*)')
+    let { data, error } = await supabase.from('posts')
+      .select('*, user:profiles(*), my_likes:likes(*)')
+      .eq('likes.user_id', user?.id)
+      .order('created_at', { ascending: false })
 
-    if(error){
+    if (error) {
       Alert.alert('Um erro aconteceu.')
     }
 

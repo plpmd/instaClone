@@ -5,5 +5,6 @@ export type Post = {
     image: string
     image_url: string
     caption: string,
-    user: User
+    user: User,
+    my_likes: any
 }
