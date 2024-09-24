@@ -18,22 +18,21 @@ export default function FeedScreen() {
 
   const fetchPosts = async () => {
     setLoading(true);
-    let { data, error } = await supabase.from('posts')
-      .select('*, user:profiles(*), my_likes:likes(*)')
-      .eq('likes.user_id', user?.id)
-      .order('created_at', { ascending: false })
+    let { data, error } = await supabase
+      .from('posts')
+      .select('*, user:profiles(*), my_likes:likes(*), likes(count)')
+      // .eq('id', 49) // show only my posts
+      .eq('my_likes.user_id', user?.id)
+      .order('created_at', { ascending: false });
 
     if (error) {
-      Alert.alert('Um erro aconteceu.')
+      Alert.alert('Something went wrong');
     }
-
     if (data && Array.isArray(data)) {
       setPosts(data);
-    } else {
-      Alert.alert('Ainda não temos posts.')
     }
     setLoading(false);
-  }
+  };
   return (
     <FlatList
       data={posts}

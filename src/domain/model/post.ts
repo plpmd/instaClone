@@ -6,5 +6,10 @@ export type Post = {
     image_url: string
     caption: string,
     user: User,
-    my_likes: any
+    my_likes: any,
+    likes: PostLike[]
+}
+
+type PostLike = {
+    count: number
 }
