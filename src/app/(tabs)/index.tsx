@@ -7,12 +7,14 @@ import { Post } from '@/src/domain/model';
 
 export default function FeedScreen() {
   const [posts, setPosts] = useState<Post[]>([])
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchPosts()
   },[])
 
   const fetchPosts = async () => {
+    setLoading(true);
     let { data, error } = await supabase.from('posts').select('*, user:profiles(*)')
 
     if(error){
@@ -24,7 +26,7 @@ export default function FeedScreen() {
     } else {
       Alert.alert('Ainda não temos posts.')
     }
-
+    setLoading(false);
   }
   return (
     <FlatList
@@ -32,6 +34,8 @@ export default function FeedScreen() {
       renderItem={({ item }) => <PostListItem post={item} />}
       contentContainerStyle={{ gap: 10, maxWidth: 512, alignSelf: 'center', width: '100%' }}
       showsVerticalScrollIndicator={false}
+      onRefresh={fetchPosts}
+      refreshing={loading}
     />
   );
 }

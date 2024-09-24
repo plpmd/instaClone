@@ -1,4 +1,4 @@
-import { Alert, Image, Text, View } from 'react-native';
+import { Alert, Image, Text, useWindowDimensions, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import TextButton from '@/src/components/TextButton';
 import pickImage from '@/src/util/pickImage';
@@ -8,12 +8,17 @@ import { supabase } from '@/src/lib/supabase';
 import { useAuth } from '@/src/providers/AuthProvider';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { User } from '@/src/domain/model';
+import { cld, uploadImage } from '@/src/lib/cloudinary';
+import { thumbnail } from "@cloudinary/url-gen/actions/resize";
+import { AdvancedImage } from 'cloudinary-react-native';
 
 export default function ProfileScreen() {
   const [image, setImage] = useState<string | null>(null);
+  const [remoteImage, setRemoteImage] = useState<string | null>(null);
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
 
+  const { width } = useWindowDimensions()
   const { user } = useAuth()
 
   useEffect(() => {
@@ -35,6 +40,7 @@ export default function ProfileScreen() {
     if (data) {
       setUsername(data[0].username)
       setBio(data[0].bio)
+      data[0].avatar_url && setRemoteImage(data[0].avatar_url)
     }
   }
 
@@ -43,15 +49,29 @@ export default function ProfileScreen() {
       return
     }
 
-    const { error } = await supabase.from('profiles').upsert({
+    const updatedProfile: User = {
       id: user?.id,
       username,
-      bio
-    })
+      bio,
+    }
+
+    if (image) {
+      const response = await uploadImage(image)
+      updatedProfile.avatar_url = response.public_id
+    }
+
+    const { error } = await supabase.from('profiles').upsert(updatedProfile)
 
     if (error) {
       Alert.alert('Failed to fetch profile')
     }
+  }
+
+  let remoteCldImage
+  if(remoteImage){
+    remoteCldImage = cld.image(remoteImage);
+    remoteCldImage
+      .resize(thumbnail().width(Math.floor(width)).height(Math.floor(width)))
   }
 
   return (
@@ -61,7 +81,7 @@ export default function ProfileScreen() {
           <Image source={{ uri: image }}
             className='w-52 aspect-square self-center rounded-full bg-slate-300'
           />
-          :
+          :  remoteCldImage ? <AdvancedImage cldImg={remoteCldImage} className='w-52 aspect-square self-center rounded-full bg-slate-300'/> :
           <View className='w-52 aspect-square self-center rounded-full bg-slate-300' />
         }
         <TextButton onPress={() => pickImage(setImage)}>Change</TextButton>

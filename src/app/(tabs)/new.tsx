@@ -27,7 +27,6 @@ export default function CreatePost() {
     const response = await uploadImage(image)
     const imagePublicId = response?.public_id
 
-
     const { data, error } = await supabase
       .from('posts')
       .insert([

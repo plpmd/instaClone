@@ -1,4 +1,4 @@
-import { Image, Text, useWindowDimensions, View } from 'react-native';
+import { Image, Pressable, Text, useWindowDimensions, View } from 'react-native';
 import { Post } from '@/src/domain/model'
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
 import { thumbnail } from "@cloudinary/url-gen/actions/resize";
@@ -6,17 +6,66 @@ import { AdvancedImage } from 'cloudinary-react-native';
 import { cld } from '../lib/cloudinary';
 import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../providers/AuthProvider';
+import { PostgrestSingleResponse } from '@supabase/supabase-js';
+import { PostLike } from '../domain/model/postLike';
 
 type Props = {
   post: Post
 }
 
 export default function PostListItem({ post }: Props) {
+  const [isLiked, setIsLiked] = useState(false)
+  const [likeRecord, setLikeRecord] = useState<PostLike |null>(null)
   const { width } = useWindowDimensions()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (isLiked && !likeRecord) {
+      saveLike()
+    } else {
+      deleteLike()
+    }
+  })
+
+  const fetchLike = async () => {
+    const { data } = await supabase.from('likes').select('*').eq('user_id', user?.id).eq('post_id', post.id).select()
+    if(data && data.length > 0){
+      setLikeRecord(data[0])
+      setIsLiked(true)
+    }
+  }
+
+  useEffect(() => {
+    fetchLike()
+  },[])
+
+  const saveLike = async () => {
+    if (!user) return
+    const { data, error }:PostgrestSingleResponse<PostLike[]>  = await supabase
+      .from('likes')
+      .insert([{ user_id: user.id, post_id: post.id }])
+      .select()
+
+    if (data) {
+      setLikeRecord(data[0])
+    }
+  }
+
+  const deleteLike = async () => {
+    if (!user) return
+    if (likeRecord) {
+      const { error } = await supabase.from('likes').delete().eq('id', likeRecord.id)
+      if(!error) setLikeRecord(null)
+    }
+  }
+
   const image = cld.image(post.image);
   image
     .resize(thumbnail().width(Math.floor(width)).height(Math.floor(width)))
-  
+
   const avatar = cld.image(post.user.avatar_url || 'default_avatar')
   avatar.resize(thumbnail().width(48).height(48).gravity(focusOn(FocusOn.face())))
 
@@ -28,7 +77,12 @@ export default function PostListItem({ post }: Props) {
       </View>
       <AdvancedImage cldImg={image} className='w-full aspect-[4/3]' />
       <View className="flex-row gap-3 p-3">
-        <AntDesign name="hearto" size={20} />
+        <AntDesign
+          name={isLiked ? 'heart' : "hearto"}
+          size={20}
+          onPress={() => setIsLiked(!isLiked)}
+          color={isLiked ? 'crimson' : 'black'}
+        />
         <Ionicons name="chatbubble-outline" size={20} />
         <Feather name="send" size={20} />
         <Feather name="bookmark" size={20} className="ml-auto" />
