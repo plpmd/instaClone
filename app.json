@@ -19,7 +19,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -33,6 +36,12 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "025f46bc-a021-4375-9963-826d18319e3f"
+      }
+    },
+    "owner": "plpmd"
   }
 }

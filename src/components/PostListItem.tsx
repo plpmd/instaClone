@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/AuthProvider';
 import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { PostLike } from '../domain/model/postLike';
+import { sendLikeNotification } from '../util/notifications';
 
 type Props = {
   post: Post
@@ -23,19 +24,19 @@ export default function PostListItem({ post }: Props) {
   const { user } = useAuth()
 
   useEffect(() => {
-      if (isLiked && !likeRecord) {
-        saveLike()
-      } else {
-        deleteLike()
-      }
+    if (isLiked && !likeRecord) {
+      saveLike()
+    } else {
+      deleteLike()
+    }
   })
 
   useEffect(() => {
-    if(post.my_likes.length > 0){
+    if (post.my_likes.length > 0) {
       setLikeRecord(post.my_likes[0])
       setIsLiked(true)
     }
-  },[post.my_likes])
+  }, [post.my_likes])
 
   const saveLike = async () => {
     if (!user) return
@@ -44,7 +45,10 @@ export default function PostListItem({ post }: Props) {
       .insert([{ user_id: user.id, post_id: post.id }])
       .select()
 
+
     if (data) {
+      sendLikeNotification(data[0])
+
       setLikeRecord(data[0])
     }
   }
@@ -85,7 +89,7 @@ export default function PostListItem({ post }: Props) {
       </View>
 
       <View className='px-3 pb-3'>
-        <Text className='font-semibold'>{post?.likes?.[0].count|| 0} likes</Text>
+        <Text className='font-semibold'>{post?.likes?.[0].count || 0} likes</Text>
         <Text>
           <Text className='font-semibold'>{post.user.username}{'  '}</Text>
           {post.caption}
