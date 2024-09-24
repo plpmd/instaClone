@@ -24,12 +24,12 @@ export default function PostListItem({ post }: Props) {
   const { user } = useAuth()
 
   useEffect(() => {
-    if (isLiked && !likeRecord) {
+    if (isLiked) {
       saveLike()
     } else {
       deleteLike()
     }
-  })
+  },[isLiked])
 
   useEffect(() => {
     if (post.my_likes.length > 0) {
@@ -39,7 +39,7 @@ export default function PostListItem({ post }: Props) {
   }, [post.my_likes])
 
   const saveLike = async () => {
-    if (!user) return
+    if (!user || likeRecord) return
     const { data }: PostgrestSingleResponse<PostLike[]> = await supabase
       .from('likes')
       .insert([{ user_id: user.id, post_id: post.id }])
@@ -47,7 +47,7 @@ export default function PostListItem({ post }: Props) {
 
 
     if (data) {
-      sendLikeNotification(data[0])
+      sendLikeNotification(data[0], user)
 
       setLikeRecord(data[0])
     }
@@ -88,7 +88,7 @@ export default function PostListItem({ post }: Props) {
         <Feather name="bookmark" size={20} className="ml-auto" />
       </View>
 
-      <View className='px-3 pb-3'>
+      <View className='p-3'>
         <Text className='font-semibold'>{post?.likes?.[0].count || 0} likes</Text>
         <Text>
           <Text className='font-semibold'>{post.user.username}{'  '}</Text>

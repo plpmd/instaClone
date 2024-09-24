@@ -1,3 +1,5 @@
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { User } from "../domain/model";
 import { NotificationMessage } from "../domain/model/notificationMessage";
 import { PostLike } from "../domain/model/postLike";
 import { supabase } from "../lib/supabase";
@@ -14,15 +16,24 @@ async function sendPushNotification(message: NotificationMessage) {
   });
 }
 
-export async function sendLikeNotification  (like: PostLike){
+export async function sendLikeNotification(like: PostLike, user: any) {
+  const { data: userData, error }: PostgrestSingleResponse<User[]> =
+    await supabase.from('profiles').select('*').eq('id', user.id);
+
+  let username = 'Alguém'
+  if(userData){
+    username = userData[0].username
+  }
+
   const { data } = await supabase.from('likes')
-  .select('*, posts(*, profiles(*))')
-  .eq('id', like.id)
-  .single()
+    .select('*, posts(*, profiles(*))')
+    .eq('id', like.id)
+    .single()
 
   const pushToken = data.posts.profiles.push_token
 
-  if(!pushToken){
+
+  if (!pushToken) {
     return
   }
 
@@ -30,10 +41,9 @@ export async function sendLikeNotification  (like: PostLike){
     to: pushToken,
     sound: 'default',
     title: 'Sua publicação recebeu uma curtida',
-    body: `${data?.posts?.profiles.username} curtiu seu post!'`,
+    body: `${username} curtiu seu post!'`,
     data: { postId: data.posts.id },
   };
-  
-  sendPushNotification(message)
 
+  sendPushNotification(message)
 }
