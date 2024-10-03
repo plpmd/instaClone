@@ -21,7 +21,6 @@ export default function FeedScreen() {
     let { data, error } = await supabase
       .from('posts')
       .select('*, user:profiles(*), my_likes:likes(*), likes(count)')
-      // .eq('id', 49) // show only my posts
       .eq('my_likes.user_id', user?.id)
       .order('created_at', { ascending: false });
 
