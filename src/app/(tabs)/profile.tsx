@@ -13,6 +13,7 @@ import { thumbnail } from "@cloudinary/url-gen/actions/resize";
 import { AdvancedImage } from 'cloudinary-react-native';
 
 export default function ProfileScreen() {
+  //Como utilizar do contexto?
   const [image, setImage] = useState<string | null>(null);
   const [remoteImage, setRemoteImage] = useState<string | null>(null);
   const [username, setUsername] = useState('')

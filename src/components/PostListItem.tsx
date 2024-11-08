@@ -5,10 +5,11 @@ import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { Ionicons } from '@expo/vector-icons';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { useState } from 'react';
-import { Text, TextInput, useWindowDimensions, View } from 'react-native';
+import { Text, TextInput, useWindowDimensions, View, Image } from 'react-native';
 import { cld } from '../lib/cloudinary';
-import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { router } from 'expo-router';
+import { useChatContext } from '../providers/ChatProvider';
 
 type Props = {
   post: Post
@@ -25,18 +26,21 @@ export default function PostListItem({ post }: Props) {
   const avatar = cld.image(post.user.avatar_url || 'default_avatar')
   avatar.resize(thumbnail().width(48).height(48).gravity(focusOn(FocusOn.face())))
 
+  const { setPostId, setPostOwner, setChatId } = useChatContext()
 
   const enterChat = async () => {
-    const { data, error } = await supabase
+    /* const { data, error } = await supabase
       .from('chats')
       .select('*')
       .eq('post_id', post.id)
 
-    if(data && data.length > 0){
+    if (data && data.length > 0) {
+      setChatId(data[0].id)
+    } */
 
-    } else {
-
-    }
+    setPostId(post.id)
+    setPostOwner(post.user)
+    router.push(`/chat`)
   }
 
   return (
@@ -48,14 +52,13 @@ export default function PostListItem({ post }: Props) {
 
       <AdvancedImage cldImg={image} className='aspect-[4/3] rounded-md' />
 
-      {/* <Text className='font-semibold'>{post?.likes?.[0].count || 0} likes</Text> */}
       <Text>
         <Text className='font-semibold'>{post.user.username}{'  '}</Text>
         {post.caption}
       </Text>
 
       <View className='relative mt-3'>
-        <TextInput className='border-none p-3 rounded-xl pr-10 bg-[#d3e6e2]  text=[#545b5a]'
+        <TextInput className='border-none p-3 rounded-xl pr-12 bg-[#e5f3f0]  text=[#545b5a]'
           placeholder='O que isso te fez pensar?'
           value={response}
           onChangeText={(newValue) => setResponse(newValue)}
