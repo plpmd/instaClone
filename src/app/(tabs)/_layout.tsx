@@ -30,7 +30,7 @@ export default function TabsLayout() {
             />
 
             <Tabs.Screen
-              name="new"
+              name="NewPost"
               options={{
                 headerTitle: 'Publicar',
                 headerTitleAlign: 'center',
@@ -41,10 +41,9 @@ export default function TabsLayout() {
             />
 
             <Tabs.Screen
-              name="profile"
+              name="(profile)"
               options={{
-                headerTitle: 'Profile',
-                headerTitleAlign: 'center',
+                headerShown: false,
                 tabBarIcon: ({ color }) => (
                   <Feather name="user" size={26} color={color} />
                 ),

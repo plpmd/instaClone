@@ -68,12 +68,17 @@ export default function PostListItem({ post }: Props) {
             <AdvancedImage cldImg={image} className='aspect-[4/3] rounded-md' />
           }
 
-          <Text className="font-Jakarta-Bold text-[#0e1b13] text-lg text-left pt-2">
-            {post.title}
-          </Text>
-          <Text className="font-Jakarta-Regular text-[#0e1b13] text-base">
-            {post.caption}
-          </Text>
+          {post.title &&
+            <Text className="font-Jakarta-Bold text-[#0e1b13] text-lg text-left pt-2">
+              {post.title}
+            </Text>
+          }
+
+          {post.caption &&
+            <Text className="font-Jakarta-Regular text-[#0e1b13] text-base">
+              {post.caption}
+            </Text>
+          }
 
           <TouchableWithoutFeedback
             onPress={enterChat}

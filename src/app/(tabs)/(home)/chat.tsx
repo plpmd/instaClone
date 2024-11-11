@@ -42,8 +42,6 @@ export default function PostChat() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImageView, setSeletedImageView] = useState("");
   const room = { id: `${postId}` };
-  const selectedImage = '123';
-  const userB = 'userB';
   const senderUser = {
     name: username,
     _id: id,

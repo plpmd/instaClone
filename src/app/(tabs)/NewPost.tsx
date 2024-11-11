@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 import { AntDesign, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import pickImage from '@/src/util/pickImage';
 
-export default function CreatePost() {
+export default function NewPost() {
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
   const [image, setImage] = useState<string | null>(null);
@@ -60,7 +60,7 @@ export default function CreatePost() {
             onPress={() => pickImage(setImage)}
           >
             <Image source={{ uri: image }}
-              className="w-full aspect-[4/3] rounded-md bg-slate-300"
+              className="w-full aspect-[4/3] rounded-md bg-slate-100"
             />
           </TouchableOpacity>
           :
@@ -70,7 +70,7 @@ export default function CreatePost() {
             <View className="flex
               items-center
               justify-center
-              aspect-[4/3] rounded-md bg-slate-300
+              aspect-[4/3] rounded-md bg-slate-100
               flex-column"
             >
               <Text className="font-Jakarta-Regular text-[#1f2722] text-lg">
