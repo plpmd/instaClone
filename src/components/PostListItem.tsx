@@ -62,7 +62,7 @@ export default function PostListItem({ post }: Props) {
         <View className="bg-white p-3 gap-3">
           <View className='flex-row items-center gap-3'>
             <AdvancedImage cldImg={avatar} className='w-12 aspect-square rounded-full' />
-            <Text className='font-semibold'>{post.user.username || 'New user'}</Text>
+            <Text className='font-Jakarta-Bold font-semibold'>{post.user.username || 'New user'}</Text>
           </View>
 
           <AdvancedImage cldImg={image} className='aspect-[4/3] rounded-md' />
