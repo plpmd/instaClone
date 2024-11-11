@@ -1,14 +1,14 @@
-import { Alert, FlatList, Image, View } from 'react-native';
-import posts from '@/assets/data/posts.json'
 import PostListItem from '@/src/components/PostListItem';
-import { useEffect, useState } from 'react';
-import { supabase } from '@/src/lib/supabase';
 import { Post } from '@/src/domain/model';
+import { supabase } from '@/src/lib/supabase';
 import { useAuth } from '@/src/providers/AuthProvider';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { Alert, Animated, Dimensions, PanResponder, StyleSheet, Text, View } from 'react-native';
 
 export default function FeedScreen() {
   const [posts, setPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     fetchPosts()
@@ -32,14 +32,78 @@ export default function FeedScreen() {
     }
     setLoading(false);
   };
+
+  const translateX = useRef(new Animated.Value(0)).current;
+  const screenWidth = Dimensions.get('window').width;
+
+  const changePost = useCallback((updateIndex: (prevIndex: number) => number) => {
+    const newIndex = updateIndex(currentIndex);
+    const direction = newIndex > currentIndex ? -screenWidth : screenWidth;
+
+    Animated.timing(translateX, {
+      toValue: direction,
+      duration: 200,
+      useNativeDriver: false,
+    }).start(() => {
+      setCurrentIndex(updateIndex);
+      translateX.setValue(0);
+
+    });
+  }, [currentIndex, screenWidth, translateX]);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: (e, gestureState) => {
+        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
+      },
+      onMoveShouldSetPanResponder: (e, gestureState) => {
+        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        const dx = gestureState.dx;
+
+        if (dx < -screenWidth / 5 && currentIndex < posts.length - 1) {
+          changePost((prevIndex) => Math.min(prevIndex + 1, posts.length - 1));
+        } else if (dx > screenWidth / 5) {
+          changePost((prevIndex) => Math.max(prevIndex - 1, 0));
+        } else {
+          resetPosition();
+        }
+      },
+    })
+  ).current;
+
+  const resetPosition = () => {
+    Animated.spring(translateX, {
+      toValue: 0,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  if (loading) {
+    return <Text>Loading...</Text>
+  }
+
+  const handlePost = () => {
+    if(currentIndex < posts.length){
+      return posts[currentIndex]
+    } else {
+      setCurrentIndex(posts.length - 1)
+      return posts.at(-1)
+    }
+  }
+
   return (
-    <FlatList
-      data={posts}
-      renderItem={({ item }) => <PostListItem post={item} />}
-      contentContainerStyle={{ gap: 10, maxWidth: 512, alignSelf: 'center', width: '100%' }}
-      showsVerticalScrollIndicator={false}
-      onRefresh={fetchPosts}
-      refreshing={loading}
-    />
+    <View className='gap-10 w-full'>
+      <Animated.View
+        style={{
+          transform: [{ translateX }]
+        }
+        }
+        {...panResponder.panHandlers}
+      >
+        <PostListItem post={handlePost() || posts[0]} />
+      </Animated.View>
+    </View>
   );
 }

@@ -6,7 +6,7 @@ export default function HomeStack() {
       <Stack.Screen
         name='index'
         options={{
-          headerTitle: 'For you',
+          headerTitle: 'Publicações',
           headerTitleAlign: 'center',
         }}
       />

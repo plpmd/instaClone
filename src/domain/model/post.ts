@@ -2,6 +2,7 @@ import { User } from "./user"
 
 export type Post = {
     id: string
+    title?: string
     image: string
     image_url: string
     caption: string,

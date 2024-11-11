@@ -4,11 +4,10 @@ import { FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
 import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { Ionicons } from '@expo/vector-icons';
 import { AdvancedImage } from 'cloudinary-react-native';
-import { useState } from 'react';
-import { Text, TextInput, useWindowDimensions, View, Image } from 'react-native';
-import { cld } from '../lib/cloudinary';
-import { supabase } from '../lib/supabase';
 import { router } from 'expo-router';
+import { useRef, useState } from 'react';
+import { ScrollView, Text, TextInput, TouchableWithoutFeedback, useWindowDimensions, View } from 'react-native';
+import { cld } from '../lib/cloudinary';
 import { useChatContext } from '../providers/ChatProvider';
 
 type Props = {
@@ -17,7 +16,6 @@ type Props = {
 
 export default function PostListItem({ post }: Props) {
   const { width } = useWindowDimensions()
-  const [response, setResponse] = useState('')
 
   const image = cld.image(post.image);
   image
@@ -43,35 +41,58 @@ export default function PostListItem({ post }: Props) {
     router.push(`/chat`)
   }
 
+  const lastTap = useRef<number | null>(null);
+
+  const handleDoubleTap = () => {
+    const now = Date.now();
+    const DOUBLE_PRESS_DELAY = 300;
+
+    if (lastTap.current && now - lastTap.current < DOUBLE_PRESS_DELAY) {
+      enterChat()
+    } else {
+      lastTap.current = now;
+    }
+  };
+
   return (
-    <View className="bg-white p-3 gap-3">
-      <View className='flex-row items-center gap-3'>
-        <AdvancedImage cldImg={avatar} className='w-12 aspect-square rounded-md' />
-        <Text className='font-semibold'>{post.user.username || 'New user'}</Text>
-      </View>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <TouchableWithoutFeedback
+        onPress={handleDoubleTap}
+      >
+        <View className="bg-white p-3 gap-3">
+          <View className='flex-row items-center gap-3'>
+            <AdvancedImage cldImg={avatar} className='w-12 aspect-square rounded-full' />
+            <Text className='font-semibold'>{post.user.username || 'New user'}</Text>
+          </View>
 
-      <AdvancedImage cldImg={image} className='aspect-[4/3] rounded-md' />
+          <AdvancedImage cldImg={image} className='aspect-[4/3] rounded-md' />
 
-      <Text>
-        <Text className='font-semibold'>{post.user.username}{'  '}</Text>
-        {post.caption}
-      </Text>
+          <Text className="font-Jakarta-Bold text-[#0e1b13] text-lg font-bold leading-tight tracking-[-0.015em] text-left pt-2">
+            {post.title}
+          </Text>
+          <Text className="font-Jakarta-Regular text-[#0e1b13] text-base font-normal leading-normal">
+            {post.caption}
+          </Text>
 
-      <View className='relative mt-3'>
-        <TextInput className='border-none p-3 rounded-xl pr-12 bg-[#e5f3f0]  text=[#545b5a]'
-          placeholder='O que isso te fez pensar?'
-          value={response}
-          onChangeText={(newValue) => setResponse(newValue)}
-          multiline
-        />
-        <Ionicons
-          name="chatbubble-outline"
-          size={24}
-          color="#545b5a"
-          className='absolute right-3 top-1/2 transform -translate-y-1/2'
-          onPress={enterChat}
-        />
-      </View>
-    </View >
+          <TouchableWithoutFeedback className='relative mt-3'
+            onPress={enterChat}
+          >
+            <View>
+              <View className='h-16 justify-center border-none p-3 rounded-xl pr-12 bg-[#e5f3f0]  text=[#545b5a]'>
+                <Text>O que isso te faz pensar?</Text>
+              </View>
+              <Ionicons
+                name="chatbubble-outline"
+                size={24}
+                color="#545b5a"
+                className='absolute right-3 top-1/2 transform -translate-y-1/2'
+              />
+            </View>
+          </TouchableWithoutFeedback>
+
+        </View >
+      </TouchableWithoutFeedback>
+    </ScrollView>
+
   );
 }

@@ -9,6 +9,7 @@ import { useAuth } from '@/src/providers/AuthProvider';
 import { router } from 'expo-router';
 
 export default function CreatePost() {
+  const [title, setTitle] = useState('')
   const [caption, setCaption] = useState('')
   const [image, setImage] = useState<string | null>(null);
 
@@ -31,7 +32,8 @@ export default function CreatePost() {
       .from('posts')
       .insert([
         { 
-          caption, 
+          caption,
+          title, 
           image: imagePublicId, 
           user_id: session?.user.id 
         },
@@ -55,6 +57,13 @@ export default function CreatePost() {
       <TextButton onPress={() => pickImage(setImage)}>
         Change
       </TextButton>
+
+      <TextInput
+        onChangeText={(newValue) => setTitle(newValue)}
+        value={title}
+        placeholder='Título da sua publicação'
+        className='w-full p-3'
+      />
 
       <TextInput
         onChangeText={(newValue) => setCaption(newValue)}
