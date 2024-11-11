@@ -4,6 +4,7 @@ import { useAuth } from '@/src/providers/AuthProvider';
 import NotificationProvider from '@/src/providers/NotificationProvider';
 import ChatProvider from '@/src/providers/ChatProvider';
 import LoggedUserProvider from '@/src/providers/LoggedUserProvider';
+import { Feather, AntDesign } from '@expo/vector-icons';
 
 export default function TabsLayout() {
   const { isAuthenticated } = useAuth()
@@ -23,7 +24,7 @@ export default function TabsLayout() {
               options={{
                 headerShown: false,
                 tabBarIcon: ({ color }) => (
-                  <FontAwesome name="home" size={26} color={color} />
+                  <AntDesign name="home" size={26} color={color} />
                 ),
               }}
             />
@@ -34,7 +35,7 @@ export default function TabsLayout() {
                 headerTitle: 'Publicar',
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ color }) => (
-                  <FontAwesome name="plus-square-o" size={26} color={color} />
+                  <AntDesign name="plus" size={26} color={color} />
                 ),
               }}
             />
@@ -45,7 +46,7 @@ export default function TabsLayout() {
                 headerTitle: 'Profile',
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ color }) => (
-                  <FontAwesome name="user" size={26} color={color} />
+                  <Feather name="user" size={26} color={color} />
                 ),
               }}
             />
