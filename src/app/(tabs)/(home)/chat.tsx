@@ -7,6 +7,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import {
   addDoc,
@@ -75,7 +76,7 @@ export default function PostChat() {
         try {
           await setDoc(roomRef, roomData);
         } catch (error) {
-          console.log(error);
+          Alert.alert(`${error}`)
         }
       }
 
@@ -157,8 +158,6 @@ export default function PostChat() {
     }
   } */
 
-  console.log('pedrin messages:::', messages)
-  console.log('pedrin user:::', senderUser)
   return (
     <ImageBackground
       resizeMode="cover"

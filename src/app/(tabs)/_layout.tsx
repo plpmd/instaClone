@@ -31,7 +31,7 @@ export default function TabsLayout() {
             <Tabs.Screen
               name="new"
               options={{
-                headerTitle: 'Create post',
+                headerTitle: 'Publicar',
                 headerTitleAlign: 'center',
                 tabBarIcon: ({ color }) => (
                   <FontAwesome name="plus-square-o" size={26} color={color} />

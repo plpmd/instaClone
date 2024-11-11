@@ -5,8 +5,8 @@ import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { Ionicons } from '@expo/vector-icons';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableWithoutFeedback, useWindowDimensions, View } from 'react-native';
+import { useRef } from 'react';
+import { ScrollView, Text, TouchableWithoutFeedback, useWindowDimensions, View } from 'react-native';
 import { cld } from '../lib/cloudinary';
 import { useChatContext } from '../providers/ChatProvider';
 
@@ -59,27 +59,28 @@ export default function PostListItem({ post }: Props) {
       <TouchableWithoutFeedback
         onPress={handleDoubleTap}
       >
-        <View className="bg-white p-3 gap-3">
+        <View className="bg-white p-3 gap-3 h-full flex-1 justify-center">
           <View className='flex-row items-center gap-3'>
             <AdvancedImage cldImg={avatar} className='w-12 aspect-square rounded-full' />
             <Text className='font-Jakarta-Bold font-semibold'>{post.user.username || 'New user'}</Text>
           </View>
+          {post.image &&
+            <AdvancedImage cldImg={image} className='aspect-[4/3] rounded-md' />
+          }
 
-          <AdvancedImage cldImg={image} className='aspect-[4/3] rounded-md' />
-
-          <Text className="font-Jakarta-Bold text-[#0e1b13] text-lg font-bold leading-tight tracking-[-0.015em] text-left pt-2">
+          <Text className="font-Jakarta-Bold text-[#0e1b13] text-lg text-left pt-2">
             {post.title}
           </Text>
-          <Text className="font-Jakarta-Regular text-[#0e1b13] text-base font-normal leading-normal">
+          <Text className="font-Jakarta-Regular text-[#0e1b13] text-base">
             {post.caption}
           </Text>
 
-          <TouchableWithoutFeedback className='relative mt-3'
+          <TouchableWithoutFeedback
             onPress={enterChat}
           >
-            <View>
-              <View className='h-16 justify-center border-none p-3 rounded-xl pr-12 bg-[#e5f3f0]  text=[#545b5a]'>
-                <Text>O que isso te faz pensar?</Text>
+            <View className='w-full mt-8'>
+              <View className='h-16 w-full justify-center border-none p-3 rounded-xl pr-12 bg-[#e5f3f0]  text=[#545b5a]'>
+                <Text className="font-Jakarta-Regular text-[#0e1b13] text-base">O que isso te faz pensar?</Text>
               </View>
               <Ionicons
                 name="chatbubble-outline"

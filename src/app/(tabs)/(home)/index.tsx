@@ -94,12 +94,9 @@ export default function FeedScreen() {
   }
 
   return (
-    <View className='gap-10 w-full'>
+    <View className='gap-10 w-full h-full'>
       <Animated.View
-        style={{
-          transform: [{ translateX }]
-        }
-        }
+        style={{ height: '100%', transform: [{ translateX }]}}
         {...panResponder.panHandlers}
       >
         <PostListItem post={handlePost() || posts[0]} />
