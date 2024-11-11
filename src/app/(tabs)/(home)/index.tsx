@@ -9,7 +9,7 @@ export default function FeedScreen() {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const postLengthRef = useRef(0)
   useEffect(() => {
     fetchPosts()
   }, [])
@@ -29,6 +29,7 @@ export default function FeedScreen() {
     }
     if (data && Array.isArray(data)) {
       setPosts(data);
+      postLengthRef.current = data.length
     }
     setLoading(false);
   };
@@ -61,9 +62,8 @@ export default function FeedScreen() {
       },
       onPanResponderRelease: (_, gestureState) => {
         const dx = gestureState.dx;
-
-        if (dx < -screenWidth / 5 && currentIndex < posts.length - 1) {
-          changePost((prevIndex) => Math.min(prevIndex + 1, posts.length - 1));
+        if (dx < -screenWidth / 5 && currentIndex < postLengthRef.current - 1) {
+          changePost((prevIndex) => Math.min(prevIndex + 1, postLengthRef.current - 1));
         } else if (dx > screenWidth / 5) {
           changePost((prevIndex) => Math.max(prevIndex - 1, 0));
         } else {
@@ -88,7 +88,7 @@ export default function FeedScreen() {
     if(currentIndex < posts.length){
       return posts[currentIndex]
     } else {
-      setCurrentIndex(posts.length - 1)
+      setCurrentIndex(posts.length -1)
       return posts.at(-1)
     }
   }
