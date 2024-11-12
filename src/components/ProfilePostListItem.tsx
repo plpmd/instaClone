@@ -9,6 +9,7 @@ import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View } from 'react-native';
 import { cld } from '../lib/cloudinary';
 import { useChatContext } from '../providers/ChatProvider';
+import { RoundButton } from './RoundButton';
 
 type Props = {
   post: Post
@@ -33,6 +34,19 @@ export default function ProfilePostListItem({ post, isSelected, setSelectedPostI
     router.push(`/chat`);
   };
 
+  const editPost = () => {
+    setSelectedPostId('')
+    
+    router.push({
+      pathname: '/NewPost',
+      params: {
+        editTitle: post.title,
+        editCaption: post.caption,
+        editImage: post.image,
+        editPostId: post.id
+      }
+    });
+  }
   return (
     <View className="relative">
       <TouchableWithoutFeedback
@@ -75,23 +89,22 @@ export default function ProfilePostListItem({ post, isSelected, setSelectedPostI
           justify-center
           ">
             <View className="flex-row space-x-4 gap-8">
-              {/* Edit Icon */}
-              <TouchableOpacity onPress={() => console.log('Edit Pressed')}>
-                <View className="bg-[#e5f3f0] p-2 rounded-full">
-                  <Ionicons name="pencil-outline" size={30} color="#545b5a" />
-                </View>
-              </TouchableOpacity>
-
-              {/* Chat Icon */}
-              <TouchableOpacity onPress={enterChat}>
-                <View className="bg-[#e5f3f0] p-2 rounded-full">
+              <RoundButton
+                onPress={editPost}
+                icon={
+                  <Ionicons name="pencil-outline" size={24} color="#545b5a" />
+                }
+              />
+              <RoundButton
+                onPress={() => console.log('Chat Pressed')}
+                icon={
                   <Ionicons
                     name="chatbubble-outline"
-                    size={30}
+                    size={24}
                     color="#545b5a"
                   />
-                </View>
-              </TouchableOpacity>
+                }
+              />
             </View>
           </View>
         </TouchableWithoutFeedback>

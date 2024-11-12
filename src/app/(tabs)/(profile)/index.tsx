@@ -5,13 +5,13 @@ import { FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
 import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { AdvancedImage } from 'cloudinary-react-native';
 import { Alert, FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { FieldCount } from './FieldCount';
+import { FieldCount } from '../../../components/FieldCount';
 import { Ionicons } from '@expo/vector-icons'
 import { useEffect, useState } from 'react';
 import { supabase } from '@/src/lib/supabase';
 import { Post } from '@/src/domain/model';
-import PostListItem from '@/src/components/PostListItem';
 import ProfilePostListItem from '@/src/components/ProfilePostListItem';
+import { RoundButton } from '@/src/components/RoundButton';
 export default function ProfileScreen() {
   const { remoteImage, username, bio, id } = useLoggedUserContext()
   const [loading, setLoading] = useState(false)
@@ -68,11 +68,12 @@ export default function ProfileScreen() {
           <Text className='font-Jakarta-Regular'>{bio}</Text>
         </View>
 
-        <View className='bg-[#e5f3f0] aspect-square rounded-full justify-center items-center'>
-          <TouchableOpacity>
+        <RoundButton
+          icon={
             <Ionicons name="pencil-outline" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+          }
+          onPress={() => console.log('edit click')}
+        />
       </View>
 
       <View className="h-px bg-slate-200 w-full" />

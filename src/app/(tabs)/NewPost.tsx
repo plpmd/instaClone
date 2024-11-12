@@ -1,17 +1,51 @@
-import React, { useState } from 'react';
-import { View, Image, TextInput, Platform, ScrollView, Keyboard, TouchableOpacity, Text, Alert } from 'react-native';
-import Button from '@/src/components/Button';
-import { uploadImage } from '@/src/lib/cloudinary';
+import React, { useEffect, useState } from 'react';
+import { View, Image, TextInput, Platform, ScrollView, Keyboard, TouchableOpacity, Text, Alert, useWindowDimensions } from 'react-native';
+import { cld, uploadImage } from '@/src/lib/cloudinary';
 import { supabase } from '@/src/lib/supabase';
 import { useAuth } from '@/src/providers/AuthProvider';
-import { router } from 'expo-router';
-import { AntDesign, Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import pickImage from '@/src/util/pickImage';
+import { RoundButton } from '@/src/components/RoundButton';
+import { thumbnail } from "@cloudinary/url-gen/actions/resize";
+import { AdvancedImage } from 'cloudinary-react-native';
+import { PostImageSelect } from '@/src/components/PostImageSelect';
 
+type Props = {
+  editTitle: string
+  editCaption: string
+  editImage: string
+  editPostId: string
+}
+
+//TODO header
 export default function NewPost() {
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
   const [image, setImage] = useState<string | null>(null);
+  const [remoteImage, setRemoteImage] = useState<string | null>(null);
+  const [postId, setPostId] = useState('')
+
+  const { editTitle, editCaption, editImage, editPostId } = useLocalSearchParams<Props>();
+
+  useEffect(() => {
+    if (editTitle) {
+      setTitle(editTitle)
+    }
+
+    if (editCaption) {
+      setCaption(editCaption)
+    }
+
+    if (editImage) {
+      setRemoteImage(editImage)
+    }
+
+    if (editPostId) {
+      setPostId(editPostId)
+    }
+
+  }, [editTitle, editCaption, editImage])
 
   const authState = useAuth();
   const session = authState?.session;
@@ -25,8 +59,9 @@ export default function NewPost() {
 
     const { error } = await supabase
       .from('posts')
-      .insert([
+      .upsert([
         {
+          id: editPostId,
           caption,
           title,
           image: imagePublicId,
@@ -40,8 +75,16 @@ export default function NewPost() {
     } else {
       router.push('/(home)');
     }
-
   };
+
+  const { width } = useWindowDimensions()
+
+  let remoteCldImage
+  if (remoteImage) {
+    remoteCldImage = cld.image(remoteImage);
+    remoteCldImage
+      .resize(thumbnail().width(Math.floor(width)).height(Math.floor(width)))
+  }
 
   return (
     <ScrollView
@@ -55,36 +98,23 @@ export default function NewPost() {
       }}
     >
       <View className="items-left flex-1 gap-3">
-        {image ?
-          <TouchableOpacity
-            onPress={() => pickImage(setImage)}
-          >
-            <Image source={{ uri: image }}
+        {remoteCldImage ? (
+          <TouchableOpacity onPress={() => pickImage(setImage)}>
+            <AdvancedImage
+              cldImg={remoteCldImage}
               className="w-full aspect-[4/3] rounded-md bg-slate-100"
             />
           </TouchableOpacity>
-          :
-          <TouchableOpacity
-            onPress={() => pickImage(setImage)}
-          >
-            <View className="flex
-              items-center
-              justify-center
-              aspect-[4/3] rounded-md bg-slate-100
-              flex-column"
-            >
-              <Text className="font-Jakarta-Regular text-[#1f2722] text-lg">
-                Adicionar foto
-              </Text>
-              <AntDesign
-                name="picture"
-                size={40}
-                color="#393e3b"
-                className='mt-8'
-              />
-            </View>
-          </TouchableOpacity>
-        }
+        ) : (
+          image ? (
+            <Image
+              source={{ uri: image }}
+              className="w-full aspect-[4/3] rounded-md bg-slate-100"
+            />
+          ) : (
+            <PostImageSelect onPress={() => pickImage(setImage)} />
+          )
+        )}
 
         <TextInput
           onChangeText={(newValue) => setTitle(newValue)}
@@ -103,13 +133,12 @@ export default function NewPost() {
           textAlignVertical="top"
         />
 
-        <View className="mt-auto w-full">
-          <Button onPress={createPost} text="Publicar" icon={
+        <View className="mt-auto w-full justify-end flex-row">
+          <RoundButton onPress={createPost} icon={
             <FontAwesome5
               name="paper-plane"
               size={24}
               color="#545b5a"
-              className='absolute right-3 top-1/2 transform -translate-y-1/2'
             />}
           />
         </View>
