@@ -16,7 +16,10 @@ export default function Button({ text, onPress, icon }: Props) {
         <View className='h-16 w-full justify-center border-none p-3 rounded-xl pr-12 bg-[#e5f3f0]  text=[#545b5a]'>
           <Text className="font-Jakarta-Regular text-[#0e1b13] text-base">{text}</Text>
         </View>
-        { icon }
+
+        <View className='absolute right-3 top-1/2 transform -translate-y-1/2'>
+          {icon}
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )

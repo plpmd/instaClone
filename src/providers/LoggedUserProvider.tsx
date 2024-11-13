@@ -17,6 +17,7 @@ export const LoggedUserContext = createContext<{
   setUsername: (value: string) => void;
   bio: string;
   setBio: (value: string) => void;
+  getProfile: () => void
 }>({
   id: '',
   setId: () => {},
@@ -26,6 +27,7 @@ export const LoggedUserContext = createContext<{
   setUsername: () => {},
   bio: '',
   setBio: () => {},
+  getProfile: () => {}
 });
 
 export const useLoggedUserContext = () => {
@@ -76,7 +78,8 @@ export default function LoggedUserProvider({ children }: Props) {
         username,
         setUsername,
         bio,
-        setBio
+        setBio,
+        getProfile
       }}
     >
       {children}

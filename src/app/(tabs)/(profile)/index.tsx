@@ -12,11 +12,24 @@ import { supabase } from '@/src/lib/supabase';
 import { Post } from '@/src/domain/model';
 import ProfilePostListItem from '@/src/components/ProfilePostListItem';
 import { RoundButton } from '@/src/components/RoundButton';
+import { router, useLocalSearchParams } from 'expo-router'
+
+type Props = {
+  refreshUser?: 'true' | 'false'
+}
 export default function ProfileScreen() {
-  const { remoteImage, username, bio, id } = useLoggedUserContext()
+  const { remoteImage, username, bio, id, getProfile } = useLoggedUserContext()
   const [loading, setLoading] = useState(false)
   const [posts, setPosts] = useState<Post[]>([])
   const [selectedPostId, setSelectedPostId] = useState<string>('')
+
+  const { refreshUser } = useLocalSearchParams<Props>();
+
+  useEffect(() => {
+    if (refreshUser === 'true') {
+      getProfile();
+    }
+  },[refreshUser])
 
   const avatar = cld.image(remoteImage || 'default_avatar')
   avatar.resize(thumbnail().width(160).height(160).gravity(focusOn(FocusOn.face())))
@@ -72,7 +85,7 @@ export default function ProfileScreen() {
           icon={
             <Ionicons name="pencil-outline" size={24} color="black" />
           }
-          onPress={() => console.log('edit click')}
+          onPress={() => router.push('/profileEdit')}
         />
       </View>
 

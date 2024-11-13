@@ -5,8 +5,8 @@ import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 import { Ionicons } from '@expo/vector-icons';
 import { AdvancedImage } from 'cloudinary-react-native';
 import { router } from 'expo-router';
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import { Text, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View } from 'react-native';
+import { Dispatch, SetStateAction } from 'react';
+import { Text, TouchableWithoutFeedback, useWindowDimensions, View } from 'react-native';
 import { cld } from '../lib/cloudinary';
 import { useChatContext } from '../providers/ChatProvider';
 import { RoundButton } from './RoundButton';
@@ -26,7 +26,7 @@ export default function ProfilePostListItem({ post, isSelected, setSelectedPostI
   const avatar = cld.image(post.user.avatar_url || 'default_avatar');
   avatar.resize(thumbnail().width(48).height(48).gravity(focusOn(FocusOn.face())));
 
-  const { setPostId, setPostOwner, setChatId } = useChatContext();
+  const { setPostId, setPostOwner } = useChatContext();
 
   const enterChat = async () => {
     setPostId(post.id);
@@ -36,7 +36,7 @@ export default function ProfilePostListItem({ post, isSelected, setSelectedPostI
 
   const editPost = () => {
     setSelectedPostId('')
-    
+
     router.push({
       pathname: '/NewPost',
       params: {
@@ -96,7 +96,7 @@ export default function ProfilePostListItem({ post, isSelected, setSelectedPostI
                 }
               />
               <RoundButton
-                onPress={() => console.log('Chat Pressed')}
+                onPress={enterChat}
                 icon={
                   <Ionicons
                     name="chatbubble-outline"

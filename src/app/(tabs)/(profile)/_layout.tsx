@@ -11,6 +11,14 @@ export default function ProfileStack() {
         }}
       />
 
+      <Stack.Screen
+        name='profileEdit'
+        options={{
+          headerTitle: 'Editar Perfil',
+          headerTitleAlign: 'center',
+        }}
+      />
+
     </Stack>
   );
 }
