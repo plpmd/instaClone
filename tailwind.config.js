@@ -8,6 +8,7 @@ module.exports = {
       fontFamily: {
         "Jakarta-Bold": ["Jakarta-Bold"],
         "Jakarta-Regular": ["Jakarta-Regular"],
+        "Jakarta-Semibold": ["Jakarta-Semibold"],
       },
     },
   },

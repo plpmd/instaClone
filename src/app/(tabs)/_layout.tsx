@@ -32,8 +32,7 @@ export default function TabsLayout() {
             <Tabs.Screen
               name="NewPost"
               options={{
-                headerTitle: 'Publicar',
-                headerTitleAlign: 'center',
+                headerShown: false,
                 tabBarIcon: ({ color }) => (
                   <AntDesign name="plus" size={26} color={color} />
                 ),
