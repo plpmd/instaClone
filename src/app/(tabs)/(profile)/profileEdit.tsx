@@ -12,6 +12,7 @@ import { AdvancedImage } from 'cloudinary-react-native';
 import { useLoggedUserContext } from '@/src/providers/LoggedUserProvider';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router'
+import { Header } from '@/src/components/Header';
 
 export default function ProfileEdit() {
   const { id, remoteImage, username, bio } = useLoggedUserContext()
@@ -60,54 +61,58 @@ export default function ProfileEdit() {
   }
 
   return (
-    <ScrollView
-      automaticallyAdjustKeyboardInsets={true}
-      keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingVertical: Platform.OS === 'android' ? 16 : 8,
-        backgroundColor: 'white',
-      }}
-    >
-      <View className='p-3 flex-1'>
-        <View className='items-center mt-3'>
-          {image ?
-            <Image source={{ uri: image }}
-              className='w-52 aspect-square self-center rounded-full bg-slate-300'
-            />
-            : remoteCldImage ? <AdvancedImage cldImg={remoteCldImage} className='w-52 aspect-square self-center rounded-full bg-slate-300' /> :
-              <View className='w-52 aspect-square self-center rounded-full bg-slate-300' />
-          }
-          <TextButton onPress={() => pickImage(setImage)}>Change</TextButton>
+    <View>
+      <Header text='Editar perfil' />
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingVertical: Platform.OS === 'android' ? 16 : 8,
+          backgroundColor: 'white',
+        }}
+      >
+        <View className='p-3 flex-1'>
+          <View className='items-center mt-3'>
+            {image ?
+              <Image source={{ uri: image }}
+                className='w-52 aspect-square self-center rounded-full bg-slate-300'
+              />
+              : remoteCldImage ? <AdvancedImage cldImg={remoteCldImage} className='w-52 aspect-square self-center rounded-full bg-slate-300' /> :
+                <View className='w-52 aspect-square self-center rounded-full bg-slate-300' />
+            }
+            <TextButton onPress={() => pickImage(setImage)}>Change</TextButton>
+          </View>
+
+          <TextInput
+            header='Username'
+            value={newUsername}
+            onChangeText={setNewUsername}
+            placeholder='José Luiz'
+          />
+
+          <TextInput
+            header='Bio'
+            value={newBio}
+            onChangeText={setNewBio}
+            placeholder='Conte algo sobre você'
+          />
+
+          <View className='mt-3'>
+            <Button onPress={updateProfile} text='Atualizar' icon={
+              <Ionicons name='checkmark' size={24} />
+            } />
+          </View>
+
+          <View className='gap-3 mt-auto'>
+            <Button onPress={() => supabase.auth.signOut()} text='Sign out' icon={
+              <AntDesign name='logout' size={20} />
+            } />
+          </View>
+
         </View>
+      </ScrollView>
+    </View>
 
-        <TextInput
-          header='Username'
-          value={newUsername}
-          onChangeText={setNewUsername}
-          placeholder='José Luiz'
-        />
-
-        <TextInput
-          header='Bio'
-          value={newBio}
-          onChangeText={setNewBio}
-          placeholder='Conte algo sobre você'
-        />
-
-        <View className='mt-3'>
-          <Button onPress={updateProfile} text='Atualizar' icon={
-            <Ionicons name='checkmark' size={24} />
-          } />
-        </View>
-
-        <View className='gap-3 mt-auto'>
-          <Button onPress={() => supabase.auth.signOut()} text='Sign out' icon={
-            <AntDesign name='logout' size={20} />
-          } />
-        </View>
-
-      </View>
-    </ScrollView>
   )
 }

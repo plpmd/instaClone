@@ -13,6 +13,7 @@ import { Post } from '@/src/domain/model';
 import ProfilePostListItem from '@/src/components/ProfilePostListItem';
 import { RoundButton } from '@/src/components/RoundButton';
 import { router, useLocalSearchParams } from 'expo-router'
+import { Header } from '@/src/components/Header';
 
 type Props = {
   refreshUser?: 'true' | 'false'
@@ -29,7 +30,7 @@ export default function ProfileScreen() {
     if (refreshUser === 'true') {
       getProfile();
     }
-  },[refreshUser])
+  }, [refreshUser])
 
   const avatar = cld.image(remoteImage || 'default_avatar')
   avatar.resize(thumbnail().width(160).height(160).gravity(focusOn(FocusOn.face())))
@@ -56,52 +57,56 @@ export default function ProfileScreen() {
 
 
   return (
-    <View className='p-3 gap-3 flex-1 bg-white'>
-      <View className='flex-row w-full items-center gap-6'>
-        <AdvancedImage cldImg={avatar} className='w-20 aspect-square rounded-full' />
-        <View className='flex-row justify-between flex-1 gap-6'>
-          <FieldCount
-            field={'Publicações'}
-            count={5}
-          />
-          <FieldCount
-            field={'Conversas'}
-            count={21}
-          />
-          <FieldCount
-            field={'Projetos'}
-            count={0}
-          />
-        </View>
-      </View>
-
-      <View className='flex-row justify-between'>
-        <View>
-          <Text className='font-Jakarta-Bold'>{username || 'Novo usuário'}</Text>
-          <Text className='font-Jakarta-Regular'>{bio}</Text>
+    <View className='flex-1 bg-white'>
+      <Header text='Perfil' />
+      <View className='p-3 gap-3'>
+        <View className='flex-row w-full items-center gap-6'>
+          <AdvancedImage cldImg={avatar} className='w-20 aspect-square rounded-full' />
+          <View className='flex-row justify-between flex-1 gap-6'>
+            <FieldCount
+              field={'Publicações'}
+              count={5}
+            />
+            <FieldCount
+              field={'Conversas'}
+              count={21}
+            />
+            <FieldCount
+              field={'Projetos'}
+              count={0}
+            />
+          </View>
         </View>
 
-        <RoundButton
-          icon={
-            <Ionicons name="pencil-outline" size={24} color="black" />
+        <View className='flex-row justify-between'>
+          <View>
+            <Text className='font-Jakarta-Bold'>{username || 'Novo usuário'}</Text>
+            <Text className='font-Jakarta-Regular'>{bio}</Text>
+          </View>
+
+          <RoundButton
+            icon={
+              <Ionicons name="pencil-outline" size={24} color="black" />
+            }
+            onPress={() => router.push('/profileEdit')}
+          />
+        </View>
+
+        <View className="h-px bg-slate-200 w-full" />
+        <Text className='font-Jakarta-Bold text-sm'>Minhas publicações:</Text>
+        <FlatList
+          data={posts}
+          renderItem={({ item }) => <ProfilePostListItem
+            setSelectedPostId={setSelectedPostId}
+            post={item}
+            isSelected={item.id === selectedPostId}
+          />
           }
-          onPress={() => router.push('/profileEdit')}
+          keyExtractor={item => item.id}
         />
+
       </View>
-
-      <View className="h-px bg-slate-200 w-full" />
-      <Text className='font-Jakarta-Bold text-sm'>Minhas publicações:</Text>
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => <ProfilePostListItem
-          setSelectedPostId={setSelectedPostId}
-          post={item}
-          isSelected={item.id === selectedPostId}
-        />
-        }
-        keyExtractor={item => item.id}
-      />
-
     </View>
+
   )
 }

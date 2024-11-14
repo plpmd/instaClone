@@ -1,3 +1,4 @@
+import { Header } from '@/src/components/Header';
 import PostListItem from '@/src/components/PostListItem';
 import { Post } from '@/src/domain/model';
 import { supabase } from '@/src/lib/supabase';
@@ -84,22 +85,24 @@ export default function FeedScreen() {
   }
 
   const handlePost = () => {
-    if(currentIndex < posts.length){
+    if (currentIndex < posts.length) {
       return posts[currentIndex]
     } else {
-      setCurrentIndex(posts.length -1)
+      setCurrentIndex(posts.length - 1)
       return posts.at(-1)
     }
   }
 
   return (
-    <View className='gap-10 w-full h-full'>
+    <View className='w-full h-full'>
+      <Header text='Publicações' />
       <Animated.View
-        style={{ height: '100%', transform: [{ translateX }]}}
+        style={{ height: '100%', flex: 1, transform: [{ translateX }] }}
         {...panResponder.panHandlers}
       >
         <PostListItem post={handlePost() || posts[0]} />
       </Animated.View>
     </View>
+
   );
 }

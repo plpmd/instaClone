@@ -6,16 +6,14 @@ export default function HomeStack() {
       <Stack.Screen
         name='index'
         options={{
-          headerTitle: 'Publicações',
-          headerTitleAlign: 'center',
+          headerShown: false,
         }}
       />
 
       <Stack.Screen
         name='chat'
         options={{
-          headerTitle: 'Conversa',
-          headerTitleAlign: 'center',
+          headerShown: false,
         }}
       />
 

@@ -24,7 +24,12 @@ export default {
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "androidStatusBar": {
+        "barStyle": "light-content",
+        "backgroundColor": "#00000000",
+        "translucent": true
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png",

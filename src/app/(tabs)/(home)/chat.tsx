@@ -31,6 +31,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import ImageView from "react-native-image-viewing";
 import { nanoid } from "nanoid";
+import { Header } from "@/src/components/Header";
+import { StatusBar } from "expo-status-bar";
 
 const randomId = nanoid();
 
@@ -157,123 +159,127 @@ export default function PostChat() {
   } */
 
   return (
-    <ImageBackground
-      resizeMode="cover"
-      source={require("../../../../assets/chatbg.png")}
-      style={{ flex: 1 }}
-    >
-      <GiftedChat
-        onSend={onSend}
-        messages={messages}
-        user={senderUser}
-        renderAvatar={null}
-        /* renderActions={(props) => (
-          <Actions
-            {...props}
-            containerStyle={{
-              position: "absolute",
-              right: 50,
-              bottom: 5,
-              zIndex: 9999,
-            }}
-            //onPressActionButton={handlePhotoPicker}
-            icon={() => (
-              <Ionicons name="camera" size={30} color={'grey'} />
-            )}
-          />
-        )} */
-        timeTextStyle={{ right: { color: 'grey' } }}
-        renderSend={(props) => {
-          const { text, onSend } = props;
-          return (
-            <Send {...props}>
-              <TouchableOpacity
-                style={{
-                  height: 40,
-                  width: 40,
-                  borderRadius: 40,
-                  backgroundColor: 'blue',
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 5,
-                  marginLeft:5
-                }}
-                onPress={() => {
-                  if (text && onSend) {
-                    onSend(
-                      {
-                        text: text.trim(),
-                      },
-                      true
-                    );
-                  }
-                }}
-              >
-                <Ionicons name="send" size={20} color={'white'} />
-              </TouchableOpacity>
-            </Send>
-
-          );
-        }}
-        renderInputToolbar={(props) => (
-          <InputToolbar
-            {...props}
-            containerStyle={{
-              marginLeft: 10,
-              marginRight: 10,
-              marginBottom: 2,
-              borderRadius: 20,
-              paddingTop: 5,
-            }}
-          />
-        )}
-        renderBubble={(props) => (
-          <Bubble
-            {...props}
-            textStyle={{ right: { color: 'white' } }}
-            wrapperStyle={{
-              left: {
-                backgroundColor: 'white',
-              },
-              right: {
-                backgroundColor: 'blue',
-              },
-            }}
-          />
-        )}
-        renderMessageImage={(props) => {
-          return (
-            <View style={{ borderRadius: 15, padding: 2 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(true);
-                  //setSeletedImageView(props.currentMessage.image);
-                }}
-              >
-                <Image
-                  resizeMode="contain"
+    <View className="flex-1">
+      <StatusBar backgroundColor='red' />
+      <Header text='Conversa' />
+      <ImageBackground
+        resizeMode="cover"
+        source={require("../../../../assets/chatbg.png")}
+        className="flex-1"
+      >
+        <GiftedChat
+          onSend={onSend}
+          messages={messages}
+          user={senderUser}
+          renderAvatar={null}
+          /* renderActions={(props) => (
+            <Actions
+              {...props}
+              containerStyle={{
+                position: "absolute",
+                right: 50,
+                bottom: 5,
+                zIndex: 9999,
+              }}
+              //onPressActionButton={handlePhotoPicker}
+              icon={() => (
+                <Ionicons name="camera" size={30} color={'grey'} />
+              )}
+            />
+          )} */
+          timeTextStyle={{ right: { color: 'grey' } }}
+          renderSend={(props) => {
+            const { text, onSend } = props;
+            return (
+              <Send {...props}>
+                <TouchableOpacity
                   style={{
-                    width: 200,
-                    height: 200,
-                    padding: 6,
-                    borderRadius: 15,
-                    resizeMode: "cover",
+                    height: 40,
+                    width: 40,
+                    borderRadius: 40,
+                    backgroundColor: 'blue',
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: 5,
+                    marginLeft: 5
                   }}
-                  source={{ uri: props.currentMessage.image }}
-                />
-                {selectedImageView ? (
-                  <ImageView
-                    imageIndex={0}
-                    visible={modalVisible}
-                    onRequestClose={() => setModalVisible(false)}
-                    images={[{ uri: selectedImageView }]}
+                  onPress={() => {
+                    if (text && onSend) {
+                      onSend(
+                        {
+                          text: text.trim(),
+                        },
+                        true
+                      );
+                    }
+                  }}
+                >
+                  <Ionicons name="send" size={20} color={'white'} />
+                </TouchableOpacity>
+              </Send>
+
+            );
+          }}
+          renderInputToolbar={(props) => (
+            <InputToolbar
+              {...props}
+              containerStyle={{
+                marginLeft: 10,
+                marginRight: 10,
+                marginBottom: 2,
+                borderRadius: 20,
+                paddingTop: 5,
+              }}
+            />
+          )}
+          renderBubble={(props) => (
+            <Bubble
+              {...props}
+              textStyle={{ right: { color: 'white' } }}
+              wrapperStyle={{
+                left: {
+                  backgroundColor: 'white',
+                },
+                right: {
+                  backgroundColor: 'blue',
+                },
+              }}
+            />
+          )}
+          renderMessageImage={(props) => {
+            return (
+              <View style={{ borderRadius: 15, padding: 2 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(true);
+                    //setSeletedImageView(props.currentMessage.image);
+                  }}
+                >
+                  <Image
+                    resizeMode="contain"
+                    style={{
+                      width: 200,
+                      height: 200,
+                      padding: 6,
+                      borderRadius: 15,
+                      resizeMode: "cover",
+                    }}
+                    source={{ uri: props.currentMessage.image }}
                   />
-                ) : null}
-              </TouchableOpacity>
-            </View>
-          );
-        }}
-      />
-    </ImageBackground>
+                  {selectedImageView ? (
+                    <ImageView
+                      imageIndex={0}
+                      visible={modalVisible}
+                      onRequestClose={() => setModalVisible(false)}
+                      images={[{ uri: selectedImageView }]}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
+      </ImageBackground>
+    </View>
   );
 }

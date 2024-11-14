@@ -6,16 +6,14 @@ export default function ProfileStack() {
       <Stack.Screen
         name='index'
         options={{
-          headerTitle: 'Perfil',
-          headerTitleAlign: 'center',
+          headerShown: false,
         }}
       />
 
       <Stack.Screen
         name='profileEdit'
         options={{
-          headerTitle: 'Editar Perfil',
-          headerTitleAlign: 'center',
+          headerShown: false,
         }}
       />
 

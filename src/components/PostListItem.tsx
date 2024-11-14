@@ -55,7 +55,7 @@ export default function PostListItem({ post }: Props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
       <TouchableWithoutFeedback
         onPress={handleDoubleTap}
       >
