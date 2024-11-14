@@ -160,7 +160,6 @@ export default function PostChat() {
 
   return (
     <View className="flex-1">
-      <StatusBar backgroundColor='red' />
       <Header text='Conversa' />
       <ImageBackground
         resizeMode="cover"
